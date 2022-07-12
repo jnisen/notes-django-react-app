@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 def getRoutes(request):
-    
+
     routes = [
         {
             'Endpoint': '/notes/',
@@ -36,4 +36,4 @@ def getRoutes(request):
             'description': 'Deletes and exiting note'
         },
     ]
-    return JsonResponse(routes, safe=True)
+    return JsonResponse(routes, safe=False)
