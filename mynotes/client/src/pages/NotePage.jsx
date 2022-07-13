@@ -22,6 +22,7 @@ export default function NotePage() {
 
   const handleUpdateNote = async () => {
    if (id === 'new') {
+      handleCreateNote()
       navigate('/')
       return
    }
@@ -31,7 +32,7 @@ export default function NotePage() {
       return
    }
 
-   await fetch(`/api/notes/update/${id}/`, {
+   await fetch(`/api/notes/${id}/`, {
       method: 'PUT',
       headers: {
          'Content-Type': 'application/json',
@@ -42,11 +43,11 @@ export default function NotePage() {
   }
 
   const handleCreateNote = async () => {
-   if (note.body !== null) {
+   if (note.body === null) {
       alert('Need a body')
       return
    }
-   await fetch(`/api/notes/create/post`, {
+   await fetch(`/api/notes/`, {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
@@ -57,7 +58,7 @@ export default function NotePage() {
   }
 
   const handleDeleteNote = async () => {
-   const response = await fetch(`/api/notes/delete/${id}/`, {
+   const response = await fetch(`/api/notes/${id}/`, {
       method: 'DELETE',
       headers: {
          'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ export default function NotePage() {
          
       </div>
       <textarea 
-         defaultValue={note?.body}
+         value={note?.body}
          onChange={(e)=>{setNote({...note, 'body':e.target.value})}}
       >
           

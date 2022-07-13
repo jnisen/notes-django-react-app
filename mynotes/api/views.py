@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Note
 from .serializer import NoteSerializer
+from .utils import updateNote, getNoteDetail, deleteNote, getNotesList, createNote
 
 @api_view(['GET']) #just get request
 def getRoutes(request):
@@ -41,44 +42,28 @@ def getRoutes(request):
     ]
     return Response(routes)
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def getNotes(request):
-    notes = Note.objects.all()
-    serializer = NoteSerializer(notes, many=True)
-    return Response(serializer.data)
 
-@api_view(['GET'])
+    if request.method == 'GET':
+        return getNotesList(request)
+
+    if request.method == 'POST':
+        return createNote(request)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
 def getNote(request, pk):
-    note = Note.objects.get(id=pk)
-    serializer = NoteSerializer(note, many= False)
-    return Response(serializer.data)
 
-@api_view(['POST'])
-def createNote(request):
-    data = request.data
-    note = Note.objects.create(
-         body=data['body']
-     )
-    serializer = NoteSerializer(note, many=False)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        return getNoteDetail(request, pk)
 
+    if request.method == 'PUT':
+        return updateNote(request, pk)
 
-@api_view(['PUT'])
-def updateNote(request, pk):
-    data = request.data
-    note = Note.objects.get(id=pk)
-    #just pass to seralize the new data instance of note
-    serializer = NoteSerializer(instance=note,data=data, many=False)
-    #if it is valid, just save it and make the change with the new data 
-    if serializer.is_valid():
-        serializer.save()
+    if request.method == 'DELETE':
+        return deleteNote(request, pk)
 
-    return Response(serializer.data)
-
-@api_view(['DELETE'])
-def deleteNote(request, pk):
-     note = Note.objects.get(id=pk)
-     note.delete()
-     return Response('Note was deleted')
+     
 
 
