@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import ListItem from '../components/ListItem'
+import AddButton from '../components/AddButton'
 
 
 export default function NoteListPage() {
@@ -14,6 +15,8 @@ export default function NoteListPage() {
         const data = await response.json()
         setNotes(data)
     }
+
+   
   return (
         <div className="notes">
             <div className="notes-header">
@@ -25,7 +28,7 @@ export default function NoteListPage() {
                     <ListItem key={index} note={note} />
                 ))}
             </div> 
-            {/* <AddButton /> */}
+            <AddButton />
         </div>
   )
 }

@@ -27,13 +27,13 @@ def getRoutes(request):
             'description': 'Creates new note with data sent in post request'
         },
         {
-            'Endpoint': '/notes/id/update/',
+            'Endpoint': '/notes/udapte/id/',
             'method': 'PUT',
             'body': {'body': ""},
             'description': 'Creates an existing note with data sent in post request'
         },
         {
-            'Endpoint': '/notes/id/delete/',
+            'Endpoint': '/notes/delete/id',
             'method': 'DELETE',
             'body': None,
             'description': 'Deletes and exiting note'
@@ -53,6 +53,16 @@ def getNote(request, pk):
     serializer = NoteSerializer(note, many= False)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def createNote(request):
+    data = request.data
+    note = Note.objects.create(
+         body=data['body']
+     )
+    serializer = NoteSerializer(note, many=False)
+    return Response(serializer.data)
+
+
 @api_view(['PUT'])
 def updateNote(request, pk):
     data = request.data
@@ -70,3 +80,5 @@ def deleteNote(request, pk):
      note = Note.objects.get(id=pk)
      note.delete()
      return Response('Note was deleted')
+
+

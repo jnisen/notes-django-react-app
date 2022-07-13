@@ -14,13 +14,24 @@ export default function NotePage() {
      }, [id])
 
      const getNote = async () => {
-        const response = await fetch(`/api/note/${id}`)
+        if (id === 'new') return
+        const response = await fetch(`/api/notes/${id}`)
         const data = await response.json();
         setNote(data)
      }
 
   const handleUpdateNote = async () => {
-   await fetch(`/api/note/update/${id}/`, {
+   if (id === 'new') {
+      navigate('/')
+      return
+   }
+   
+   if (note.body.length === 0) {
+      handleDeleteNote()
+      return
+   }
+
+   await fetch(`/api/notes/update/${id}/`, {
       method: 'PUT',
       headers: {
          'Content-Type': 'application/json',
@@ -30,8 +41,23 @@ export default function NotePage() {
    navigate('/')
   }
 
+  const handleCreateNote = async () => {
+   if (note.body !== null) {
+      alert('Need a body')
+      return
+   }
+   await fetch(`/api/notes/create/post`, {
+      method: 'POST',
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(note)
+   })
+   navigate('/')
+  }
+
   const handleDeleteNote = async () => {
-   const response = await fetch(`/api/note/delete/${id}/`, {
+   const response = await fetch(`/api/notes/delete/${id}/`, {
       method: 'DELETE',
       headers: {
          'Content-Type': 'application/json',
@@ -48,7 +74,10 @@ export default function NotePage() {
          <h3>
             <ArrowLeft onClick={handleUpdateNote}/>
          </h3>
-      <button onClick={handleDeleteNote}>Delete</button>    
+         {id !== 'new' ? 
+          <button onClick={handleDeleteNote}>Delete</button> :
+          <button onClick={handleCreateNote}>Done</button>}
+         
       </div>
       <textarea 
          defaultValue={note?.body}
